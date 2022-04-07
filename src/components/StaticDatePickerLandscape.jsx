@@ -1,29 +1,44 @@
 import * as React from "react";
-import isWeekend from "date-fns/isWeekend";
 import brLocale from "date-fns/locale/pt-BR";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import { Box, Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import { Temporal } from "@js-temporal/polyfill";
 
-const options = [
-  "07:00",
-  "08:00",
-  "09:00",
-  "10:00",
-  "11:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-];
+const options = [7, 8, 9, 10, 11, 13, 14, 15, 16, 17];
 
 export default function StaticDatePickerLandscape() {
-  const [value, setValue] = React.useState(new Date());
-  const [startTime, setStartTime] = React.useState('');
-  const [endTime, setEndTime] = React.useState('');
+  const [value, setValue] = React.useState(Temporal.Now.instant().toString());
+  const [startTime, setStartTime] = React.useState("");
+  const [endTime, setEndTime] = React.useState("");
+  const [unavailableDates, setUnavailableDates] = React.useState([]);
+  const [today] = React.useState(Temporal.Now.plainDateISO());
+  const [minDate, setMinDate] = React.useState(Temporal.Now.plainDateISO());
+  const [maxDate, setMaxDate] = React.useState(
+    Temporal.Now.plainDateISO().add({ days: 14 })
+  );
+
+  const isNotAvailable = (date) => {
+    const formatted = new Temporal.PlainDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    if (Temporal.PlainDate.compare(formatted, maxDate) === 1) return true;
+    if (Temporal.PlainDate.compare(formatted, minDate) === -1) return true;
+    if (date.getDay() === 0) return true;
+    return false;
+  };
+
+  const handleSchedule = () => {
+    console.log(value, startTime, endTime);
+    // setUnavailableDates([...unavailableDates, getFormattedDate(value)])
+  };
 
   return (
     <Box
@@ -39,9 +54,10 @@ export default function StaticDatePickerLandscape() {
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={brLocale}>
         <StaticDatePicker
           orientation="portrait"
+          minDate={minDate}
           openTo="day"
           value={value}
-          shouldDisableDate={isWeekend}
+          shouldDisableDate={isNotAvailable}
           toolbarTitle="Selecione a data"
           toolbarFormat="dd 'de' MMMM"
           onChange={(newValue) => {
@@ -49,7 +65,9 @@ export default function StaticDatePickerLandscape() {
           }}
           renderInput={(params) => <TextField {...params} />}
         />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '65%' }}>
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: 2, width: "65%" }}
+        >
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
               Hora de início
@@ -68,7 +86,7 @@ export default function StaticDatePickerLandscape() {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth>
+          <FormControl fullWidth disabled={startTime === ""}>
             <InputLabel id="demo-simple-select-label">
               Hora de término
             </InputLabel>
@@ -80,14 +98,22 @@ export default function StaticDatePickerLandscape() {
               onChange={(e) => setEndTime(e.target.value)}
             >
               {options.map((option, index) => (
-                <MenuItem key={index} value={option}>
+                <MenuItem disabled={option <= startTime} key={index} value={option}>
                   {option}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Box>
-        <Button variant="contained" sx={{ mt: 4 }} color="info">Reservar</Button>
+        <Button
+          disabled={startTime === "" || endTime === ""}
+          variant="contained"
+          sx={{ mt: 4 }}
+          color="info"
+          onClick={handleSchedule}
+        >
+          Reservar
+        </Button>
       </LocalizationProvider>
     </Box>
   );
