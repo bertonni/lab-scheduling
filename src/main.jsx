@@ -22,17 +22,15 @@ const theme = createTheme({
           width: "100%",
           maxWidth: '500px',
           "& div:first-of-type": {
-            // width: '100%',
             justifyContent: 'space-between'
           },
           "& div:first-of-type div[role=presentation]": {
             width: '50%',
-            flexGrow: 2,
           },
-          // "& .Mui-selected, & .Mui-selected:focus, & .Mui-selected:hover": {
-          //   color: `${palette.common.white} !important`,
-          //   backgroundColor: `${green["A400"]} !important`,
-          // },
+          "& .Mui-selected, & .Mui-selected:focus, & .Mui-selected:hover": {
+            color: `#fdfdfd !important`,
+            backgroundColor: `#349A46 !important`,
+          },
         },
         viewTransitionContainer: {
           "& > div > div": {
@@ -55,7 +53,7 @@ const theme = createTheme({
           maxWidth: '500px',
           "& div div ~ div": {
             overflowX: 'hidden',
-            margin: 0,
+            // margin: 0,
             width: '100%'
           }
         }

@@ -83,7 +83,7 @@ export default function StaticDatePickerLandscape() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          renderInput={(params) => <TextField {...params} sx={{ width: '200%' }} />}
+          renderInput={(params) => <TextField {...params} fullWidth />}
         />
         <TimeSelect
           startTime={startTime}
