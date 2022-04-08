@@ -55,6 +55,11 @@ const theme = createTheme({
             overflowX: 'hidden',
             // margin: 0,
             width: '100%'
+          },
+          "& div div ~ div div:first-of-type": {
+            // margin: 0,
+            paddingLeft: 0,
+            paddingRight: 0
           }
         }
       }

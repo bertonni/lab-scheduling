@@ -9,7 +9,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import TimeSelect from "./TimeSelect";
 import LabSelect from "./LabSelect";
 import { PickersDay, pickersDayClasses } from "@mui/lab";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
 export default function StaticDatePickerLandscape() {
   const [value, setValue] = React.useState(Temporal.Now.instant().toString());
@@ -43,23 +43,32 @@ export default function StaticDatePickerLandscape() {
 
   const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
     return (
-      <PickersDay {...pickersDayProps} sx={{
-        [`&&.${pickersDayClasses.selected}`]: {
-          backgroundColor: '#349A46'
-        },
-        [`&&.${pickersDayClasses.today}`]: {
-          borderColor: '#349A46'
-        }
-      }} />
-    )
-  }
+      <PickersDay
+        {...pickersDayProps}
+        sx={{
+          [`&&.${pickersDayClasses.selected}`]: {
+            backgroundColor: "#349A46",
+          },
+          [`&&.${pickersDayClasses.today}`]: {
+            borderColor: "#349A46",
+          },
+        }}
+      />
+    );
+  };
+
+  const getFormattedDate = (date) => {
+    const [year, month, day] = date.split("-");
+
+    return `${day}/${month}/${year}`;
+  };
 
   return (
     <Box
       sx={{
         height: "100%",
         display: "flex",
-        width: '100%',
+        width: "100%",
         flexDirection: "column",
         alignItems: "center",
       }}
@@ -83,7 +92,15 @@ export default function StaticDatePickerLandscape() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          renderInput={(params) => <TextField {...params} fullWidth />}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              fullWidth
+              
+              helperText={`A data precisa estar entre ${getFormattedDate(minDate.toString())}
+               e ${getFormattedDate(maxDate.toString())}`}
+            />
+          )}
         />
         <TimeSelect
           startTime={startTime}
