@@ -85,6 +85,7 @@ export default function StaticDatePickerLandscape() {
           openTo="day"
           value={value}
           showDaysOutsideCurrentMonth
+          displayStaticWrapperAs="desktop"
           renderDay={renderWeekPickerDay}
           shouldDisableDate={isNotAvailable}
           toolbarTitle="Selecione a data"
@@ -111,7 +112,7 @@ export default function StaticDatePickerLandscape() {
         <Button
           disabled={startTime === "" || endTime === "" || selectedLab === ""}
           variant="contained"
-          sx={{ mt: 4 }}
+          sx={{ my: 2 }}
           color="ifgreen"
           onClick={handleSchedule}
         >

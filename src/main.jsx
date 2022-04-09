@@ -21,11 +21,22 @@ const theme = createTheme({
         root: {
           width: "100%",
           maxWidth: '500px',
-          "& div:first-of-type": {
-            justifyContent: 'space-between'
+          "& > div:first-of-type": {
+            display: 'flex',
+            alignItems: 'center',
+          },
+          "& > div:first-of-type > div:first-of-type": {
+            display: 'flex',
+            pointerEvents: 'none'
+          },
+          "& > div:first-of-type > div:first-of-type ~ div": {
+            width: '20%'
           },
           "& div:first-of-type div[role=presentation]": {
             width: '50%',
+          },
+          "& div:first-of-type div[role=presentation] .MuiButtonBase-root": {
+            display: 'none'
           },
           "& .Mui-selected, & .Mui-selected:focus, & .Mui-selected:hover": {
             color: `#fdfdfd !important`,
@@ -33,24 +44,29 @@ const theme = createTheme({
           },
         },
         viewTransitionContainer: {
+          width: '100%',
           "& > div > div": {
             justifyContent: "space-between !important",
-            paddingLeft: (1.25),
-            paddingRight: (1.25),
           },
           "& div[role=row]": {
-            paddingLeft: (1.25),
-            paddingRight: (1.25),
             justifyContent: "space-between !important",
           },
         },
+        "& div:first-of-type": {
+          backgroundColor: 'red'
+        }
       },
     },
     MuiPickerStaticWrapper: {
       styleOverrides: {
         root: {
           width: '100%',
+          margin: 0,
           maxWidth: '500px',
+          "& div:first-of-type div:first-of-type": {
+            width: '100%',
+            margin: 0,
+          },
           "& div div ~ div": {
             overflowX: 'hidden',
             // margin: 0,
