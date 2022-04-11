@@ -9,6 +9,8 @@ import { Temporal } from "@js-temporal/polyfill";
 import TimeSelect from "./TimeSelect";
 import LabSelect from "./LabSelect";
 import { PickersDay, pickersDayClasses } from "@mui/lab";
+import { useAuth } from "../contexts/AuthContext";
+import { useSchedule } from "../contexts/ScheduleContext";
 
 export default function StaticDatePickerLandscape() {
   const [value, setValue] = useState(new Date());
@@ -20,6 +22,9 @@ export default function StaticDatePickerLandscape() {
   const [maxDate] = useState(Temporal.Now.plainDateISO().add({ days: 14 }));
   const [selectLabError, setSelectLabError] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const { user } = useAuth();
+  const { addReservation } = useSchedule();
 
   const handleClose = () => {
     setOpen(false);
@@ -46,12 +51,18 @@ export default function StaticDatePickerLandscape() {
     });
 
     const scheduling = {
-      user: "user",
+      user: {
+        id: user.uid,
+        name: user.displayName,
+        email: user.email,
+      },
       date: date.toString(),
-      start: `${startTime}:00`,
-      end: `${endTime}:00`,
+      start: startTime,
+      end: endTime,
     };
-    console.log(scheduling);
+
+    addReservation(scheduling);
+    // console.log(scheduling);
     // setUnavailableDates([...unavailableDates, getFormattedDate(value)])
   };
 
@@ -119,6 +130,11 @@ export default function StaticDatePickerLandscape() {
           )}
         />
         <TimeSelect
+          date={Temporal.PlainDate.from({
+            year: value.getFullYear(),
+            month: value.getMonth() + 1,
+            day: value.getDate(),
+          }).toString()}
           startTime={startTime}
           setStartTime={setStartTime}
           endTime={endTime}

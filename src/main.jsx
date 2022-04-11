@@ -1,44 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthProvider } from './contexts/AuthContext';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ScheduleProvider } from "./contexts/ScheduleContext";
 
 const theme = createTheme({
   palette: {
     ifgreen: {
-      main: '#349A46',
-      contrastText: '#fdfdfd'
+      main: "#349A46",
+      contrastText: "#fdfdfd",
     },
     ifred: {
-      main: '#CA2128',
-      contrastText: '#fdfdfd'
+      main: "#CA2128",
+      contrastText: "#fdfdfd",
     },
-    tonalOffset: 0.2
+    tonalOffset: 0.2,
   },
   components: {
     MuiCalendarPicker: {
       styleOverrides: {
         root: {
           width: "100%",
-          maxWidth: '500px',
+          maxWidth: "500px",
           "& > div:first-of-type": {
-            display: 'flex',
-            alignItems: 'center',
+            display: "flex",
+            alignItems: "center",
           },
           "& > div:first-of-type > div:first-of-type": {
-            display: 'flex',
-            pointerEvents: 'none'
+            display: "flex",
+            pointerEvents: "none",
           },
           "& > div:first-of-type > div:first-of-type ~ div": {
-            width: '30%'
+            width: "30%",
           },
           "& div:first-of-type div[role=presentation]": {
-            width: '50%',
+            width: "50%",
           },
           "& div:first-of-type div[role=presentation] .MuiButtonBase-root": {
-            display: 'none'
+            display: "none",
           },
           "& .Mui-selected, & .Mui-selected:focus, & .Mui-selected:hover": {
             color: `#fdfdfd !important`,
@@ -46,7 +47,7 @@ const theme = createTheme({
           },
         },
         viewTransitionContainer: {
-          width: '100%',
+          width: "100%",
           "& > div > div": {
             justifyContent: "space-between !important",
           },
@@ -55,43 +56,45 @@ const theme = createTheme({
           },
         },
         "& div:first-of-type": {
-          backgroundColor: 'red'
-        }
+          backgroundColor: "red",
+        },
       },
     },
     MuiPickerStaticWrapper: {
       styleOverrides: {
         root: {
-          width: '100%',
+          width: "100%",
           margin: 0,
-          maxWidth: '500px',
+          maxWidth: "500px",
           "& div:first-of-type div:first-of-type": {
-            width: '100%',
+            width: "100%",
             margin: 0,
           },
           "& div div ~ div": {
-            overflowX: 'hidden',
+            overflowX: "hidden",
             // margin: 0,
-            width: '100%'
+            width: "100%",
           },
           "& div div ~ div div:first-of-type": {
             // margin: 0,
             paddingLeft: 0,
-            paddingRight: 0
-          }
-        }
-      }
-    }
-  }
+            paddingRight: 0,
+          },
+        },
+      },
+    },
+  },
 });
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <ScheduleProvider>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </ScheduleProvider>
     </AuthProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);

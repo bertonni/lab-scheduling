@@ -1,11 +1,41 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import React from "react";
+import { useEffect, useState } from "react";
+import { useSchedule } from "../contexts/ScheduleContext";
 
 const options = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-export default function TimeSelect({ startTime, setStartTime, endTime, setEndTime }) {
+export default function TimeSelect({
+  date,
+  startTime,
+  setStartTime,
+  endTime,
+  setEndTime,
+}) {
+  const { schedules } = useSchedule();
+  const [minValue, setMinValue] = useState(0);
+  const [maxValue, setMaxValue] = useState(0);
+
+  useEffect(() => {
+    const data = schedules.filter((value) => value.date === date);
+    if (data.length === 0) return;
+    const unavailableStartTimes = data.map(({ start }) => start);
+    const unavailableEndTimes = data.map(({ end }) => end);
+
+    setMinValue(Math.min(...unavailableStartTimes));
+    setMaxValue(Math.max(...unavailableEndTimes));
+  }, [date, startTime, endTime]);
+
   return (
-    <Box sx={{ display: "flex", flexDirection: 'column', alignItems: "center", gap: 2, width: '100%', maxWidth: '500px' }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 2,
+        width: "100%",
+        maxWidth: "500px",
+      }}
+    >
       <FormControl fullWidth>
         <InputLabel id="start-time">Início *</InputLabel>
         <Select
@@ -17,7 +47,17 @@ export default function TimeSelect({ startTime, setStartTime, endTime, setEndTim
           onChange={(e) => setStartTime(e.target.value)}
         >
           {options.map((option, index) => (
-            <MenuItem key={index} disabled={option >= endTime && endTime != ""} value={option}>
+            <MenuItem
+              key={index}
+              disabled={
+                (option >= endTime && endTime != "") ||
+                (option >= minValue &&
+                  option <= maxValue &&
+                  minValue !== 0 &&
+                  maxValue !== 0)
+              }
+              value={option}
+            >
               {option < 10 ? `0${option}` : option}:00
             </MenuItem>
           ))}
