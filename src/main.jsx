@@ -30,7 +30,7 @@ const theme = createTheme({
             pointerEvents: 'none'
           },
           "& > div:first-of-type > div:first-of-type ~ div": {
-            width: '20%'
+            width: '30%'
           },
           "& div:first-of-type div[role=presentation]": {
             width: '50%',
@@ -40,7 +40,7 @@ const theme = createTheme({
           },
           "& .Mui-selected, & .Mui-selected:focus, & .Mui-selected:hover": {
             color: `#fdfdfd !important`,
-            backgroundColor: `#349A46 !important`,
+            // backgroundColor: `#349A46 !important`,
           },
         },
         viewTransitionContainer: {

@@ -1,28 +1,34 @@
-import * as React from "react";
+import { useState } from "react";
 import brLocale from "date-fns/locale/pt-BR";
-import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { Temporal } from "@js-temporal/polyfill";
 import TimeSelect from "./TimeSelect";
 import LabSelect from "./LabSelect";
 import { PickersDay, pickersDayClasses } from "@mui/lab";
-import { useTheme } from "@mui/material/styles";
 
 export default function StaticDatePickerLandscape() {
-  const [value, setValue] = React.useState(Temporal.Now.instant().toString());
-  const [startTime, setStartTime] = React.useState("");
-  const [selectedLab, setSelectedLab] = React.useState("");
-  const [endTime, setEndTime] = React.useState("");
-  const [unavailableDates, setUnavailableDates] = React.useState([]);
-  const [minDate, setMinDate] = React.useState(Temporal.Now.plainDateISO());
-  const [maxDate] = React.useState(
-    Temporal.Now.plainDateISO().add({ days: 14 })
-  );
-  const [selectLabError, setSelectLabError] = React.useState(false);
-  const theme = useTheme();
+  const [value, setValue] = useState(new Date());
+  const [startTime, setStartTime] = useState("");
+  const [selectedLab, setSelectedLab] = useState("");
+  const [endTime, setEndTime] = useState("");
+  // const [unavailableDates, setUnavailableDates] = useState([]);
+  const [minDate, setMinDate] = useState(Temporal.Now.plainDateISO());
+  const [maxDate] = useState(Temporal.Now.plainDateISO().add({ days: 14 }));
+  const [selectLabError, setSelectLabError] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const isNotAvailable = (date) => {
     const formatted = new Temporal.PlainDate(
@@ -37,7 +43,20 @@ export default function StaticDatePickerLandscape() {
   };
 
   const handleSchedule = () => {
-    console.log(selectedLab, value, startTime, endTime);
+    setOpen(true);
+    const date = Temporal.PlainDate.from({
+      year: value.getFullYear(),
+      month: value.getMonth() + 1,
+      day: value.getDate(),
+    });
+
+    const scheduling = {
+      user: 'user',
+      date: date.toString(),
+      start: `${startTime}:00`,
+      end: `${endTime}:00`,
+    }
+    console.log(scheduling);
     // setUnavailableDates([...unavailableDates, getFormattedDate(value)])
   };
 
@@ -73,6 +92,7 @@ export default function StaticDatePickerLandscape() {
         alignItems: "center",
       }}
     >
+     
       <LabSelect
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -97,8 +117,9 @@ export default function StaticDatePickerLandscape() {
             <TextField
               {...params}
               fullWidth
-              
-              helperText={`A data precisa estar entre ${getFormattedDate(minDate.toString())}
+              helperText={`A data precisa estar entre ${getFormattedDate(
+                minDate.toString()
+              )}
                e ${getFormattedDate(maxDate.toString())}`}
             />
           )}
@@ -119,6 +140,26 @@ export default function StaticDatePickerLandscape() {
           Reservar
         </Button>
       </LocalizationProvider>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={5000}
+        onClose={handleClose}
+      >
+        <Alert severity="success" onClose={handleClose}>
+          Agendamento realizado para o dia{" "}
+          <b>
+            {getFormattedDate(
+              Temporal.PlainDate.from({
+                year: value.getFullYear(),
+                month: value.getMonth() + 1,
+                day: value.getDate(),
+              }).toString()
+            )}
+          </b>{" "}
+          das <b>{startTime}:00</b> às <b>{endTime}:00</b>
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
