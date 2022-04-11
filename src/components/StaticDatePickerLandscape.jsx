@@ -4,12 +4,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import StaticDatePicker from "@mui/lab/StaticDatePicker";
-import {
-  Box,
-  Button,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Box, Button, Snackbar, Alert, Typography } from "@mui/material";
 import { Temporal } from "@js-temporal/polyfill";
 import TimeSelect from "./TimeSelect";
 import LabSelect from "./LabSelect";
@@ -51,11 +46,11 @@ export default function StaticDatePickerLandscape() {
     });
 
     const scheduling = {
-      user: 'user',
+      user: "user",
       date: date.toString(),
       start: `${startTime}:00`,
       end: `${endTime}:00`,
-    }
+    };
     console.log(scheduling);
     // setUnavailableDates([...unavailableDates, getFormattedDate(value)])
   };
@@ -92,7 +87,6 @@ export default function StaticDatePickerLandscape() {
         alignItems: "center",
       }}
     >
-     
       <LabSelect
         selectedLab={selectedLab}
         setSelectedLab={setSelectedLab}
@@ -147,17 +141,19 @@ export default function StaticDatePickerLandscape() {
         onClose={handleClose}
       >
         <Alert severity="success" onClose={handleClose}>
-          Agendamento realizado para o dia{" "}
-          <b>
-            {getFormattedDate(
-              Temporal.PlainDate.from({
-                year: value.getFullYear(),
-                month: value.getMonth() + 1,
-                day: value.getDate(),
-              }).toString()
-            )}
-          </b>{" "}
-          das <b>{startTime}:00</b> às <b>{endTime}:00</b>
+          <Typography textAlign={"center"}>
+            Agendamento realizado para o dia{" "}
+            <b>
+              {getFormattedDate(
+                Temporal.PlainDate.from({
+                  year: value.getFullYear(),
+                  month: value.getMonth() + 1,
+                  day: value.getDate(),
+                }).toString()
+              )}
+            </b>{" "}
+            das <b>{startTime}:00</b> às <b>{endTime}:00</b>
+          </Typography>
         </Alert>
       </Snackbar>
     </Box>

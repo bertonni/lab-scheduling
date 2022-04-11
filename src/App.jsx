@@ -2,6 +2,7 @@ import { Box, Button, ButtonGroup, Typography } from "@mui/material";
 import { useState } from "react";
 import StaticDatePickerLandscape from "./components/StaticDatePickerLandscape";
 import ViewReservations from "./components/ViewReservations";
+import { styled } from "@mui/material/styles";
 
 function App() {
   const [selectedTab, setSelectedTab] = useState(1);
@@ -9,6 +10,12 @@ function App() {
   const handleSelectedTab = (newValue) => {
     setSelectedTab(newValue);
   };
+
+  const CustomButton = styled(Button)(({ theme }) => ({
+    "&:hover": {
+      
+    }
+  }))
 
   return (
     <Box
@@ -27,7 +34,7 @@ function App() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          mb: 1
+          mb: 1,
         }}
       >
         <ButtonGroup
@@ -36,15 +43,21 @@ function App() {
         >
           <Button
             onClick={() => handleSelectedTab(1)}
-            color="success"
-            sx={{ backgroundColor: selectedTab === 1 ? "#00897b" : "#80cbc4" }}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 1 ? "#00897b" : "#80cbc4",
+              "&:hover": { opacity: "0.7 !important" },
+            }}
           >
             Reservar Horário
           </Button>
           <Button
             onClick={() => handleSelectedTab(2)}
-            color="success"
-            sx={{ backgroundColor: selectedTab === 2 ? "#00897b" : "#80cbc4" }}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 2 ? "#039be5" : "#81d4fa",
+              "&:hover": { opacity: "0.7 !important" },
+            }}
           >
             Ver Reservas
           </Button>
