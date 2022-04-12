@@ -62,7 +62,9 @@ export default function StaticDatePickerLandscape() {
     };
 
     addReservation(scheduling);
-    // console.log(scheduling);
+    setStartTime("");
+    setEndTime("");
+    setSelectedLab("");
     // setUnavailableDates([...unavailableDates, getFormattedDate(value)])
   };
 

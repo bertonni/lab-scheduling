@@ -12,17 +12,41 @@ export default function TimeSelect({
   setEndTime,
 }) {
   const { schedules } = useSchedule();
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(0);
+  const [unavailableStartTimes, setUnavailableStartTimes] = useState([]);
+  const [unavailableEndTimes, setUnavailableEndTimes] = useState([]);
+  const [startTimes, setStartTimes] = useState([]);
 
   useEffect(() => {
     const data = schedules.filter((value) => value.date === date);
     if (data.length === 0) return;
-    const unavailableStartTimes = data.map(({ start }) => start);
-    const unavailableEndTimes = data.map(({ end }) => end);
+    const timesTooked = data.map(({ start, end }) => start + "-" + end);
 
-    setMinValue(Math.min(...unavailableStartTimes));
-    setMaxValue(Math.max(...unavailableEndTimes));
+    const unavailableStart = [];
+    const unavailableEnd = [];
+    const startValues = [];
+
+    for (let i = 0; i < timesTooked.length; i++) {
+      startValues.push(parseInt(timesTooked[i].split('-')[0]));
+    }
+
+    setStartTimes(startValues);
+
+    console.log(startValues);
+    for (let i = 0; i < timesTooked.length; i++) {
+      const [start, end] = timesTooked[i].split("-");
+      for (let j = parseInt(start); j < parseInt(end); j++) {
+        unavailableStart.push(j);
+      }
+    }
+    setUnavailableStartTimes(unavailableStart);
+
+    for (let i = 0; i < timesTooked.length; i++) {
+      const [start, end] = timesTooked[i].split("-");
+      for (let j = parseInt(start) + 1; j <= parseInt(end); j++) {
+        unavailableEnd.push(j);
+      }
+    }
+    setUnavailableEndTimes(unavailableEnd);
   }, [date, startTime, endTime]);
 
   return (
@@ -44,17 +68,22 @@ export default function TimeSelect({
           id="start-time-select"
           value={startTime}
           label="Início"
-          onChange={(e) => setStartTime(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value === "") {
+              setEndTime("");
+            }
+            setStartTime(e.target.value);
+          }}
         >
+          <MenuItem value="">
+            <em>Nenhum</em>
+          </MenuItem>
           {options.map((option, index) => (
             <MenuItem
               key={index}
               disabled={
                 (option >= endTime && endTime != "") ||
-                (option >= minValue &&
-                  option <= maxValue &&
-                  minValue !== 0 &&
-                  maxValue !== 0)
+                unavailableStartTimes.includes(option)
               }
               value={option}
             >
@@ -73,8 +102,17 @@ export default function TimeSelect({
           label="Término"
           onChange={(e) => setEndTime(e.target.value)}
         >
+          <MenuItem value="">
+            <em>Nenhum</em>
+          </MenuItem>
           {options.map((option, index) => (
-            <MenuItem disabled={option <= startTime} key={index} value={option}>
+            <MenuItem
+              disabled={
+                option <= startTime || unavailableEndTimes.includes(option)
+              }
+              key={index}
+              value={option}
+            >
               {option < 10 ? `0${option}` : option}:00
             </MenuItem>
           ))}
