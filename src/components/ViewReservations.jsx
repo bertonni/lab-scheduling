@@ -21,6 +21,7 @@ import {
 import { Temporal } from "@js-temporal/polyfill";
 import { motion } from "framer-motion";
 import { useSchedule } from "../contexts/ScheduleContext";
+import DisplayReservationsPerDayAndLab from "./DisplayReservationsPerDayAndLab";
 
 const variants = {
   initial: { y: -20, opacity: 0 },
@@ -187,69 +188,15 @@ export default function ViewReservations() {
           </Button>
         </ButtonGroup>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 1,
-        }}
-      >
-        {reservations.length === 0 ? (
-          <Typography mt={2}>Não há reservas para este dia =)</Typography>
-        ) : (
-          <Grid
-            container
-            spacing={2}
-            width="100vw"
-            mt={2}
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <Grid item xs={4}>
-              <Typography fontWeight={600}>Solicitante</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography textAlign={"center"} fontWeight={600}>
-                Laboratório
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography textAlign={"center"} fontWeight={600}>
-                Data / Hora
-              </Typography>
-            </Grid>
-          </Grid>
-        )}
-        {reservations.map((schedule, index) => (
-          <Grid
-            container
-            key={index}
-            spacing={1}
-            width="100%"
-            alignItems={"center"}
-            justifyContent="center"
-          >
-            <Grid item xs={4}>
-              <Typography fontWeight={400}>{schedule.user.email}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography textAlign={"center"} fontWeight={400}>
-                {schedule.lab}
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography textAlign={"center"} fontWeight={400}>
-                {getFormattedDate(schedule.date)} -{" "}
-                {schedule.start < 10 ? "0" + schedule.start : schedule.start}h
-                às {schedule.end < 10 ? "0" + schedule.end : schedule.end}h
-              </Typography>
-            </Grid>
-          </Grid>
-        ))}
-        {/* <Pagination count={3} variant="outlined" shape="rounded" /> */}
-      </Box>
+      <DisplayReservationsPerDayAndLab
+        reservations={reservations}
+        date={Temporal.PlainDate.from({
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        }).toString()}
+        lab={"lab" + selectedTab}
+      />
     </>
   );
 }
