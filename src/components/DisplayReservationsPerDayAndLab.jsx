@@ -15,6 +15,10 @@ export default function DisplayReservationsPerDayAndLab({
     return `${day}/${month}/${year}`;
   };
 
+  const getLabIdentification = (labs) => {
+    return "G" + labs[labs.length -1];
+  }
+
   useEffect(() => {
     const schedulesForDate = reservations.filter(reserve => reserve.lab === lab && reserve.date === date);
 
@@ -87,7 +91,7 @@ export default function DisplayReservationsPerDayAndLab({
           </Grid>
           <Grid item xs={3} py={1}>
             <Typography textAlign={"center"} fontWeight={400}>
-              {schedule.lab}
+              {getLabIdentification(schedule.lab)}
             </Typography>
           </Grid>
           <Grid item xs={4} py={1}>
