@@ -41,7 +41,6 @@ function App() {
           mb: 1,
         }}
       >
-        {user && <Button onClick={logout}>Sair</Button>}
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -70,6 +69,7 @@ function App() {
           </Button>
         </ButtonGroup>
       </Box>
+      {user && <Button onClick={logout}>Sair</Button>}
       {selectedTab === 1 ? <StaticDatePickerLandscape /> : <ViewReservations />}
     </Box>
   );

@@ -2,9 +2,10 @@ import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSchedule } from "../contexts/ScheduleContext";
 
-const options = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+const options = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 export default function TimeSelect({
+  lab,
   date,
   startTime,
   setStartTime,
@@ -17,21 +18,32 @@ export default function TimeSelect({
   const [startTimes, setStartTimes] = useState([]);
 
   useEffect(() => {
-    const data = schedules.filter((value) => value.date === date);
-    if (data.length === 0) return;
-    const timesTooked = data.map(({ start, end }) => start + "-" + end);
+    setStartTime("");
+    setEndTime("");
+  }, [date]);
 
+  useEffect(() => {
+    console.log(lab);
+    const data = schedules.filter((value) => value.date === date && lab === value.lab);
     const unavailableStart = [];
     const unavailableEnd = [];
     const startValues = [];
 
+    if (data.length === 0) {
+      setStartTimes([]);
+      setUnavailableStartTimes([]);
+      setUnavailableEndTimes([]);
+      return;
+    }
+
+    const timesTooked = data.map(({ start, end }) => start + "-" + end);
+
     for (let i = 0; i < timesTooked.length; i++) {
-      startValues.push(parseInt(timesTooked[i].split('-')[0]));
+      startValues.push(parseInt(timesTooked[i].split("-")[0]));
     }
 
     setStartTimes(startValues);
 
-    console.log(startValues);
     for (let i = 0; i < timesTooked.length; i++) {
       const [start, end] = timesTooked[i].split("-");
       for (let j = parseInt(start); j < parseInt(end); j++) {
@@ -47,7 +59,7 @@ export default function TimeSelect({
       }
     }
     setUnavailableEndTimes(unavailableEnd);
-  }, [date, startTime, endTime]);
+  }, [date, startTime, endTime, lab]);
 
   return (
     <Box
@@ -60,7 +72,7 @@ export default function TimeSelect({
         maxWidth: "500px",
       }}
     >
-      <FormControl fullWidth>
+      <FormControl fullWidth disabled={lab === ""}>
         <InputLabel id="start-time">Início *</InputLabel>
         <Select
           required
@@ -83,7 +95,7 @@ export default function TimeSelect({
               key={index}
               disabled={
                 (option >= endTime && endTime != "") ||
-                unavailableStartTimes.includes(option)
+                unavailableStartTimes.includes(option) || index === options.length -1
               }
               value={option}
             >
@@ -108,7 +120,10 @@ export default function TimeSelect({
           {options.map((option, index) => (
             <MenuItem
               disabled={
-                option <= startTime || unavailableEndTimes.includes(option)
+                option <= startTime ||
+                unavailableEndTimes.includes(option) ||
+                (startTime < unavailableEndTimes[0] &&
+                  option >= unavailableEndTimes[0])
               }
               key={index}
               value={option}

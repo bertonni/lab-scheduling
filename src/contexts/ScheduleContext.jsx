@@ -14,6 +14,7 @@ export function ScheduleProvider({ children }) {
     const res = schedules.find(
       (schedule) =>
         schedule.date === reservation.date &&
+        schedule.lab === reservation.lab &&
         reservation.start === schedule.start
     );
     if (!res) {

@@ -26,6 +26,18 @@ export default function StaticDatePickerLandscape() {
   const { user } = useAuth();
   const { addReservation } = useSchedule();
 
+  const [scheduling, setScheduling] = useState({
+    user: {
+      id: user.uid,
+      name: user.displayName,
+      email: user.email,
+    },
+    lab: "",
+    date: "",
+    start: "",
+    end: "",
+  });
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -50,16 +62,12 @@ export default function StaticDatePickerLandscape() {
       day: value.getDate(),
     });
 
-    const scheduling = {
-      user: {
-        id: user.uid,
-        name: user.displayName,
-        email: user.email,
-      },
-      date: date.toString(),
-      start: startTime,
-      end: endTime,
-    };
+    scheduling.lab = selectedLab;
+    scheduling.date = date.toString();
+    scheduling.start = startTime;
+    scheduling.end = endTime;
+
+    setScheduling(scheduling);
 
     addReservation(scheduling);
     setStartTime("");
@@ -132,6 +140,7 @@ export default function StaticDatePickerLandscape() {
           )}
         />
         <TimeSelect
+          lab={selectedLab}
           date={Temporal.PlainDate.from({
             year: value.getFullYear(),
             month: value.getMonth() + 1,
@@ -170,7 +179,17 @@ export default function StaticDatePickerLandscape() {
                 }).toString()
               )}
             </b>{" "}
-            das <b>{startTime}:00</b> às <b>{endTime}:00</b>
+            das{" "}
+            <b>
+              {scheduling.start < 10
+                ? "0" + scheduling.start
+                : scheduling.start}
+              :00
+            </b>{" "}
+            às{" "}
+            <b>
+              {scheduling.end < 10 ? "0" + scheduling.end : scheduling.end}:00
+            </b>
           </Typography>
         </Alert>
       </Snackbar>
