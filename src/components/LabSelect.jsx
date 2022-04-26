@@ -29,7 +29,7 @@ export default function LabSelect({ selectedLab, setSelectedLab, error, setError
               <em>Nenhum</em>
             </MenuItem>
           {options.map((option, index) => (
-            <MenuItem key={index} value={`lab${index+1}`}>
+            <MenuItem key={index} value={`LAB-G${index+1}`}>
               {option}
             </MenuItem>
           ))}

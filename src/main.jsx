@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ScheduleProvider } from "./contexts/ScheduleContext";
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     ifgreen: {
       main: "#349A46",
@@ -23,7 +23,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           width: "100%",
-          maxWidth: "500px",
           "& > div:first-of-type": {
             display: "flex",
             alignItems: "center",
@@ -64,8 +63,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           width: "100%",
-          margin: 0,
-          maxWidth: "500px",
+          marginLeft: 0,
+          maxWidth: "800px",
           "& div:first-of-type div:first-of-type": {
             width: "100%",
             margin: 0,

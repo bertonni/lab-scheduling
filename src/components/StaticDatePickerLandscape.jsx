@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import brLocale from "date-fns/locale/pt-BR";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import TextField from "@mui/material/TextField";
@@ -24,7 +24,7 @@ export default function StaticDatePickerLandscape() {
   const [open, setOpen] = useState(false);
 
   const { user } = useAuth();
-  const { addReservation } = useSchedule();
+  const { addReservation, error } = useSchedule();
 
   const [scheduling, setScheduling] = useState({
     user: {
@@ -37,6 +37,13 @@ export default function StaticDatePickerLandscape() {
     start: "",
     end: "",
   });
+
+  useEffect(() => {
+    if (selectedLab === "") {
+      setStartTime("");
+      setEndTime("");
+    }
+  }, [selectedLab]);
 
   const handleClose = () => {
     setOpen(false);
@@ -115,30 +122,38 @@ export default function StaticDatePickerLandscape() {
         setError={setSelectLabError}
       />
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={brLocale}>
-        <StaticDatePicker
-          orientation="portrait"
-          openTo="day"
-          value={value}
-          showDaysOutsideCurrentMonth
-          displayStaticWrapperAs="desktop"
-          renderDay={renderWeekPickerDay}
-          shouldDisableDate={isNotAvailable}
-          toolbarTitle="Selecione a data"
-          toolbarFormat="dd 'de' MMMM"
-          onChange={(newValue) => {
-            setValue(newValue);
+        <Box
+          minHeight={300}
+          sx={{
+            width: "100%",
+            maxWidth: "500px",
           }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              fullWidth
-              helperText={`A data precisa estar entre ${getFormattedDate(
-                minDate.toString()
-              )}
+        >
+          <StaticDatePicker
+            orientation="portrait"
+            openTo="day"
+            value={value}
+            showDaysOutsideCurrentMonth
+            displayStaticWrapperAs="desktop"
+            renderDay={renderWeekPickerDay}
+            shouldDisableDate={isNotAvailable}
+            toolbarTitle="Selecione a data"
+            toolbarFormat="dd 'de' MMMM"
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                helperText={`A data precisa estar entre ${getFormattedDate(
+                  minDate.toString()
+                )}
                e ${getFormattedDate(maxDate.toString())}`}
-            />
-          )}
-        />
+              />
+            )}
+          />
+        </Box>
         <TimeSelect
           lab={selectedLab}
           date={Temporal.PlainDate.from({
@@ -169,7 +184,7 @@ export default function StaticDatePickerLandscape() {
       >
         <Alert severity="success" onClose={handleClose}>
           <Typography textAlign={"center"}>
-            Agendamento realizado para o dia{" "}
+            Agendamento realizado para o laboratório <b>{scheduling.lab}</b> dia{" "}
             <b>
               {getFormattedDate(
                 Temporal.PlainDate.from({

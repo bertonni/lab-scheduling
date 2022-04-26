@@ -12,11 +12,9 @@ import {
   Typography,
   Chip,
   useTheme,
-  Grid,
-  Stack,
-  Pagination,
   ButtonGroup,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import { Temporal } from "@js-temporal/polyfill";
 import { motion } from "framer-motion";
@@ -35,6 +33,8 @@ export default function ViewReservations() {
   const [reservations, setReservations] = useState([]);
   const [selectedTab, setSelectedTab] = useState(1);
   const theme = useTheme();
+
+  const smallScreen = (useMediaQuery(theme.breakpoints.down('sm')));
 
   const isNotAvailable = (date) => {
     if (date.getDay() === 0) return true;
@@ -58,6 +58,7 @@ export default function ViewReservations() {
       schedules.filter((schedule) => schedule.date === formattedDate)
     );
   }, [selectedDate]);
+
 
   const AnimatedChip = motion(Chip);
 
@@ -85,20 +86,25 @@ export default function ViewReservations() {
     <>
       <Box mb={4}> </Box>
       <LocalizationProvider dateAdapter={AdapterDateFns} locale={brLocale}>
-        <StaticDatePicker
-          orientation="portrait"
-          openTo="day"
-          value={selectedDate}
-          showDaysOutsideCurrentMonth
-          displayStaticWrapperAs="desktop"
-          renderDay={renderWeekPickerDay}
-          shouldDisableDate={isNotAvailable}
-          toolbarTitle="Selecione a data"
-          onChange={(newValue) => {
-            setSelectedDate(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} fullWidth />}
-        />
+        <Box minHeight={300} sx={{
+          width: '100%',
+          maxWidth: '500px'
+        }}>
+          <StaticDatePicker
+            orientation="portrait"
+            openTo="day"
+            value={selectedDate}
+            showDaysOutsideCurrentMonth
+            displayStaticWrapperAs="desktop"
+            renderDay={renderWeekPickerDay}
+            shouldDisableDate={isNotAvailable}
+            toolbarTitle="Selecione a data"
+            onChange={(newValue) => {
+              setSelectedDate(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+          />
+        </Box>
       </LocalizationProvider>
       <Box
         sx={{
@@ -111,7 +117,7 @@ export default function ViewReservations() {
           },
         }}
       >
-        <Typography variant="h4" component="h4">
+        <Typography variant={smallScreen ? "h5" : "h4"} component="h4">
           Reservas do dia
         </Typography>
         <AnimatedChip
@@ -195,7 +201,7 @@ export default function ViewReservations() {
           month: selectedDate.getMonth() + 1,
           day: selectedDate.getDate(),
         }).toString()}
-        lab={"lab" + selectedTab}
+        lab={"LAB-G" + selectedTab}
       />
     </>
   );

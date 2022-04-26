@@ -1,25 +1,58 @@
-import { Box, Button, ButtonGroup, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useState } from "react";
 import StaticDatePickerLandscape from "./components/StaticDatePickerLandscape";
 import ViewReservations from "./components/ViewReservations";
-import { styled } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { useAuth } from "./contexts/AuthContext";
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState(1);
   const { user, logout, login } = useAuth();
+  const [selectedTab, setSelectedTab] = useState(1);
+  const theme = useTheme();
+
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleSelectedTab = (newValue) => {
     setSelectedTab(newValue);
   };
 
-
-  if (!user) return (
-    <>
-      <Typography variant="h3">You must login to access the system</Typography>
-      <Button onClick={login}>Entrar</Button>
-    </>
-  );
+  if (!user || !user.email.includes("@igarassu.ifpe.edu.br")){
+    logout();
+    return (
+      <Box display="flex" flexDirection={"column"} alignItems={"center"} px={4}>
+        <Typography
+          textAlign={"center"}
+          mt={4}
+          mb={2}
+          variant={smallScreen ? "h5" : "h4"}
+        >
+          Agendamento de Laboratório
+        </Typography>
+        <Typography
+          textAlign={"center"}
+          mb={2}
+          mt={4}
+          variant={smallScreen ? "h7" : "h6"}
+        >
+          Você precisa fazer o login com o e-mail institucional para fazer um
+          agendamento
+        </Typography>
+        <Button
+          onClick={login}
+          variant="contained"
+          size={smallScreen ? "small" : "medium"}
+        >
+          Entrar
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -29,7 +62,12 @@ function App() {
       height={"100vh"}
       sx={{ px: { xs: "2rem", sm: "3rem", lg: "6rem" } }}
     >
-      <Typography textAlign={"center"} mt={4} mb={2} variant="h4">
+      <Typography
+        textAlign={"center"}
+        mt={4}
+        mb={2}
+        variant={smallScreen ? "h5" : "h4"}
+      >
         Agendamento de Laboratório
       </Typography>
       <Box
@@ -47,7 +85,7 @@ function App() {
         >
           <Button
             onClick={() => handleSelectedTab(1)}
-            // color="success"
+            size={smallScreen ? "small" : "medium"}
             sx={{
               backgroundColor: selectedTab === 1 ? "#00897b" : "#80cbc4",
               "&:focus": { backgroundColor: "#00897b" },
@@ -58,7 +96,7 @@ function App() {
           </Button>
           <Button
             onClick={() => handleSelectedTab(2)}
-            // color="success"
+            size={smallScreen ? "small" : "medium"}
             sx={{
               backgroundColor: selectedTab === 2 ? "#039be5" : "#81d4fa",
               "&:focus": { backgroundColor: "#039be5" },
@@ -69,7 +107,17 @@ function App() {
           </Button>
         </ButtonGroup>
       </Box>
-      {user && <Button onClick={logout}>Sair</Button>}
+      {user && (
+        <Button
+          variant="contained"
+          color="error"
+          size={smallScreen ? "small" : "medium"}
+          onClick={logout}
+          sx={{ position: "absolute", top: 4, right: 20 }}
+        >
+          Sair
+        </Button>
+      )}
       {selectedTab === 1 ? <StaticDatePickerLandscape /> : <ViewReservations />}
     </Box>
   );
