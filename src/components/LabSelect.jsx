@@ -1,7 +1,8 @@
 import { Box, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import React from 'react';
 
-const options = ['Laboratório G1', 'Laboratório G2', 'Laboratório G3', 'Laboratório G4'];
+const options = ['Laboratório G1', 'Laboratório G2', 'Laboratório G3', 'Laboratório G4', 'Laboratório F1', 'Laboratório F2', 'Laboratório F3', 'Laboratório F4'];
+const values = ['LAB-G1', 'LAB-G2', 'LAB-G3', 'LAB-G4', 'LAB-F1', 'LAB-F2', 'LAB-F3', 'LAB-F4'];
 
 export default function LabSelect({ selectedLab, setSelectedLab, error, setError }) {
   return (
@@ -29,7 +30,7 @@ export default function LabSelect({ selectedLab, setSelectedLab, error, setError
               <em>Nenhum</em>
             </MenuItem>
           {options.map((option, index) => (
-            <MenuItem key={index} value={`LAB-G${index+1}`}>
+            <MenuItem key={index} value={values[index]}>
               {option}
             </MenuItem>
           ))}

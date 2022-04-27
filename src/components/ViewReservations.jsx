@@ -47,6 +47,11 @@ export default function ViewReservations() {
     return `${day}/${month}/${year}`;
   };
 
+  const getLab = (selected) => {
+    const lab = `LAB-${selected <= 4 ? 'G' + selected : 'F' + (selected - 4)}`
+    return lab;
+  }
+
   useEffect(() => {
     const formattedDate = Temporal.PlainDate.from({
       year: selectedDate.getFullYear(),
@@ -139,7 +144,7 @@ export default function ViewReservations() {
           )}
         />
       </Box>
-      <Box my={2}>
+      <Box my={2} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
@@ -152,6 +157,7 @@ export default function ViewReservations() {
               backgroundColor: selectedTab === 1 ? "#039be5" : "#81d4fa",
               "&:focus": { backgroundColor: "#039be5" },
               "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
             }}
           >
             Lab g1
@@ -164,6 +170,7 @@ export default function ViewReservations() {
               backgroundColor: selectedTab === 2 ? "#039be5" : "#81d4fa",
               "&:focus": { backgroundColor: "#039be5" },
               "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
             }}
           >
             Lab g2
@@ -176,6 +183,7 @@ export default function ViewReservations() {
               backgroundColor: selectedTab === 3 ? "#039be5" : "#81d4fa",
               "&:focus": { backgroundColor: "#039be5" },
               "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
             }}
           >
             Lab g3
@@ -188,9 +196,67 @@ export default function ViewReservations() {
               backgroundColor: selectedTab === 4 ? "#039be5" : "#81d4fa",
               "&:focus": { backgroundColor: "#039be5" },
               "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
             }}
           >
             Lab g4
+          </Button>
+        </ButtonGroup>
+        <ButtonGroup
+          variant="contained"
+          aria-label="outlined primary button group"
+        >
+          <Button
+            size="small"
+            onClick={() => handleSelectedTab(5)}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 5 ? "#039be5" : "#81d4fa",
+              "&:focus": { backgroundColor: "#039be5" },
+              "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
+            }}
+          >
+            Lab f1
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleSelectedTab(6)}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 6 ? "#039be5" : "#81d4fa",
+              "&:focus": { backgroundColor: "#039be5" },
+              "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
+            }}
+          >
+            Lab f2
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleSelectedTab(7)}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 7 ? "#039be5" : "#81d4fa",
+              "&:focus": { backgroundColor: "#039be5" },
+              "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
+            }}
+          >
+            Lab f3
+          </Button>
+          <Button
+            size="small"
+            onClick={() => handleSelectedTab(8)}
+            // color="success"
+            sx={{
+              backgroundColor: selectedTab === 8 ? "#039be5" : "#81d4fa",
+              "&:focus": { backgroundColor: "#039be5" },
+              "&:hover": { backgroundColor: "#0179c3" },
+              width: '69px'
+            }}
+          >
+            Lab f4
           </Button>
         </ButtonGroup>
       </Box>
@@ -201,7 +267,7 @@ export default function ViewReservations() {
           month: selectedDate.getMonth() + 1,
           day: selectedDate.getDate(),
         }).toString()}
-        lab={"LAB-G" + selectedTab}
+        lab={getLab(selectedTab)}
       />
     </>
   );
