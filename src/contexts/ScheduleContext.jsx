@@ -1,4 +1,10 @@
-import { collection, doc, setDoc, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { db } from "../utils/firebase";
@@ -15,38 +21,31 @@ export function ScheduleProvider({ children }) {
   const [schedules, setSchedules] = useLocalStorage("schedules", []);
   const [error, setError] = useState("");
 
+  const getDataFromFirebase = async (arr, lab) => {
+    const querySnapshot = await getDocs(collection(db, lab));
+    querySnapshot.forEach((doc) => {
+      arr.push(doc.data());
+    });
+  };
+
   useEffect(async () => {
-    if (user && schedules.length === 0) {
+    if (user) {
       const data = [];
       try {
-        // const q = query();
-        const querySnapshot = await getDocs(collection(db, "LAB-G1"));
-        querySnapshot.forEach((doc) => {
-          data.push(doc.data());
-        });  
-      
-        const querySnapshot2 = await getDocs(collection(db, "LAB-G2"));
-        querySnapshot2.forEach((doc) => {
-          data.push(doc.data());
-        });
-      
-        const querySnapshot3 = await getDocs(collection(db, "LAB-G3"));
-        querySnapshot3.forEach((doc) => {
-          data.push(doc.data());
-        });
-      
-        const querySnapshot4 = await getDocs(collection(db, "LAB-G4"));
-        querySnapshot4.forEach((doc) => {
-          data.push(doc.data());
-        });
-
+        await getDataFromFirebase(data, "LAB-G1");
+        await getDataFromFirebase(data, "LAB-G2");
+        await getDataFromFirebase(data, "LAB-G3");
+        await getDataFromFirebase(data, "LAB-G4");
+        await getDataFromFirebase(data, "LAB-F1");
+        await getDataFromFirebase(data, "LAB-F2");
+        await getDataFromFirebase(data, "LAB-F3");
+        await getDataFromFirebase(data, "LAB-F4");
       } catch (error) {
         console.log(error);
       }
       setSchedules(data);
     }
   }, []);
-  
 
   const addReservation = async (reservation) => {
     try {
@@ -57,19 +56,33 @@ export function ScheduleProvider({ children }) {
           `${reservation.date}-${
             reservation.start < 10 ? "0" + reservation.start : reservation.start
           }`
-        ), reservation
+        ),
+        reservation
       );
       setSchedules([...schedules, reservation]);
     } catch (e) {
       setError(e);
     }
-    
+  };
+
+  const removeSchedule = async (schedule) => {
+    const updatedSchedules = schedules.filter(
+      (sched) => JSON.stringify(sched) !== JSON.stringify(schedule)
+    );
+
+    const id = `${schedule.date}-${schedule.start < 10 ? "0" + schedule.start : schedule.start}`
+
+    await deleteDoc(doc(db, schedule.lab, id));
+
+    setSchedules(updatedSchedules);
+    console.log(updatedSchedules);
   };
 
   const memoedValues = useMemo(
     () => ({
       schedules,
       error,
+      removeSchedule,
       addReservation,
     }),
     [schedules, error]
