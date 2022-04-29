@@ -65,24 +65,31 @@ export function ScheduleProvider({ children }) {
     }
   };
 
-  const removeSchedule = async (schedule) => {
-    const updatedSchedules = schedules.filter(
-      (sched) => JSON.stringify(sched) !== JSON.stringify(schedule)
-    );
-
+  const removeReservation = async (schedule) => {
+    let updatedSchedules = [];
+    let errorMessage = "";
     const id = `${schedule.date}-${schedule.start < 10 ? "0" + schedule.start : schedule.start}`
 
-    await deleteDoc(doc(db, schedule.lab, id));
+    await deleteDoc(doc(db, schedule.lab, id)).then((res) => {
+      updatedSchedules = schedules.filter(
+        (sched) => JSON.stringify(sched) !== JSON.stringify(schedule)
+      );
+    }).catch((err) => {
+      if (err) {
+        errorMessage = "Houve um erro ao executar a ação. Tente novamente mais tarde";
+      }
+    });
 
-    setSchedules(updatedSchedules);
-    console.log(updatedSchedules);
+    if (errorMessage === "") setSchedules(updatedSchedules);
+    setError(errorMessage);
   };
 
   const memoedValues = useMemo(
     () => ({
       schedules,
       error,
-      removeSchedule,
+      setError,
+      removeReservation,
       addReservation,
     }),
     [schedules, error]

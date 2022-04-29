@@ -26,9 +26,9 @@ export default function DisplayReservationsPerDayAndLab({
   useEffect(() => {
     const schedulesForDate = reservations.filter(
       (reserve) => reserve.lab === lab && reserve.date === date
-    );
+      );
+    
     schedulesForDate.sort((a, b) => a.start - b.start);
-
     setSchedulesForSelectedLab(schedulesForDate);
   }, [date, lab, reservations]);
 
@@ -146,7 +146,7 @@ export default function DisplayReservationsPerDayAndLab({
                   </IconButton>
                 </Typography>
               ) : (
-                "---"
+                <></>
               )}
             </Grid>
           </Grid>

@@ -17,7 +17,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 export default function ConfirmBox({ open, close, schedule, confirm }) {
-  const { removeSchedule } = useSchedule();
+  const { removeReservation, error, setError } = useSchedule();
 
   if (Object.keys(schedule).length === 0) return null;
 
@@ -26,11 +26,16 @@ export default function ConfirmBox({ open, close, schedule, confirm }) {
     close();
   };
 
-  const handleConfirm = () => {
-    removeSchedule(schedule);
-    confirm(true);
+  const handleConfirm = async () => {
+    await removeReservation(schedule);
+    if (error !== "") confirm(true);
     close();
   };
+
+  if (error !== "") {
+    console.log('error while remove schedule');
+    setError("");
+  }
 
   const formattedDate = (date) => {
     const [year, month, day] = date.split('-');
